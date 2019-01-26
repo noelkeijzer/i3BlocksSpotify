@@ -49,7 +49,7 @@ if [[ -n "$artist" ]]; then
     fi
 
     scrollposition=$((scrollposition + 1))
-    if [[ $scrollposition -ge ${textlen} ]]; then
+    if [[ $scrollposition -ge $textlen ]] && [[ $scrollposition -ge $maxlen ]]; then
         scrollposition=0
     fi
 
