@@ -1,6 +1,6 @@
 #!/bin/bash
-title=$(dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'|egrep -A 1 "title"|cut -b 44-|cut -d '"' -f 1|egrep -v ^$)
-artist=$(dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'|egrep -A 2 "artist"|cut -b 20-|cut -d '"' -f 2|egrep -v ^$|egrep -v array|egrep -v artist)
+title=$(dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'|grep -E -A 1 "title"|cut -b 44-|cut -d '"' -f 1|grep -E -v ^$)
+artist=$(dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'|grep -E -A 2 "artist"|cut -b 20-|cut -d '"' -f 2|grep -E -v ^$|grep -E -v array|grep -E -v artist)
 
 playpause="dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause"
 nextsong="dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next"
@@ -44,7 +44,7 @@ if [[ -n "$artist" ]]; then
             song="${song:$scrollposition:$lastIndex}${song:0:$readuntil}"
         fi
     else
-        if [[ $(($scrollposition + $maxlen)) -le $lastIndex ]]; then
+        if [[ $((scrollposition + maxlen)) -le $lastIndex ]]; then
             song="${song:$scrollposition:$maxlen}"
         else
             readuntil=$((maxlen - 1 - $((lastIndex - scrollposition))))
