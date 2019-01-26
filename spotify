@@ -18,7 +18,7 @@ if [[ -n "$artist" ]]; then
 
     textlen=${#song}
     if [[ $textlen -lt $maxlen ]]; then
-        song=$(printf "%"$maxlen"s" "$song")
+        song=$(printf "%${maxlen}s" "$song")
     fi
 
     lastIndex=$((${#song}))
