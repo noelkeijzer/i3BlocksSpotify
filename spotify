@@ -10,27 +10,35 @@ interval=0.1
 if [[ -n "$artist" ]]; then
     song="$artist : $title      "
     scrollposition=1
+    # If scrollfile exists and the current song was already playing load scrollposition
     if [[ -f "${scrollfile}" ]] && [[ -f "${songfile}" ]] && [[ "${song}" == $(cat "${songfile}") ]]; then
         scrollposition=$(cat "${scrollfile}")
     fi
 
     echo "${song}" > $songfile
 
+    # Pad text until it is the size of the block
     textlen=${#song}
     if [[ $textlen -lt $maxlen ]]; then
         song=$(printf "%${maxlen}s" "$song")
     fi
 
+    # Load substring to display
     lastIndex=$((${#song}))
     readuntil=$((maxlen - $((lastIndex - scrollposition))))
     song="${song:$scrollposition:${#song}}${song:0:$readuntil}"
 
+    # Update scrollposition
     scrollposition=$((scrollposition + 1))
     if [[ $scrollposition -ge $textlen ]] && [[ $scrollposition -gt $maxlen ]]; then
         scrollposition=1
     fi
     echo "${scrollposition}" > $scrollfile
+    
+    # Sleep to control scroll speed
     sleep "${interval}"
+
+    # Print song
     echo "<span font='10'> ${song//[&]/&amp;}</span>"
     echo "<span font='10'> ${song//[&]/&amp;}</span>"
 fi
