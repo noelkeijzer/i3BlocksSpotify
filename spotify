@@ -5,7 +5,7 @@ artist=$(dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpri
 scrollfile="/tmp/.scrollposition"
 songfile="/tmp/.song"
 maxlen=45
-interval=0.1
+interval=0.15
 
 if [[ -n "$artist" ]]; then
     song="$artist : $title      "
@@ -25,8 +25,12 @@ if [[ -n "$artist" ]]; then
 
     # Load substring to display
     lastIndex=$((${#song}))
-    readuntil=$((maxlen - $((lastIndex - scrollposition))))
-    song="${song:$scrollposition:${#song}}${song:0:$readuntil}"
+    if [[ $((${#song} - scrollposition)) -ge $maxlen ]]; then
+        song="${song:$scrollposition:$maxlen}"
+    else
+        readuntil=$((maxlen - $((lastIndex - scrollposition))))
+        song="${song:$scrollposition:${#song}}${song:0:$readuntil}"
+    fi
 
     # Update scrollposition
     scrollposition=$((scrollposition + 1))
