@@ -4,8 +4,9 @@ artist=$(dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpri
 
 scrollfile="/tmp/.scrollposition"
 songfile="/tmp/.song"
-maxlen=45
+maxlen=35
 interval=0.15
+scrollsmallsongs=false
 
 if [[ -n "$artist" ]]; then
     song="$artist : $title      "
@@ -21,6 +22,9 @@ if [[ -n "$artist" ]]; then
     textlen=${#song}
     if [[ $textlen -lt $maxlen ]]; then
         song=$(printf "%${maxlen}s" "$song")
+        if ! $scrollsmallsongs; then
+            scrollposition=1
+        fi
     fi
 
     # Load substring to display
